@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CrossWord Quest Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+<style data-purpose="custom-fonts">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#4A6FA5',
+              darkblue: '#2A4365',
+              lightblue: '#E2E8F0',
+              purple: '#6B46C1',
+              gray: '#F1F5F9',
+              text: '#1E293B',
+              muted: '#64748B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 antialiased text-brand-text">
+<!-- BEGIN: Main Login Container -->
+<main class="bg-white rounded-3xl shadow-2xl flex w-full max-w-[1000px] overflow-hidden min-h-[600px]">
+<!-- BEGIN: Left Information Pane -->
+<section class="w-1/2 bg-slate-50 p-12 flex flex-col relative overflow-hidden" data-purpose="branding-pane">
+<!-- Background subtle shapes could go here if needed, keeping it clean for now -->
+<!-- Brand Header -->
+<header class="flex items-center gap-3 mb-10 z-10">
+<div class="bg-brand-darkblue text-white p-2 rounded-lg flex items-center justify-center shadow-md">
+<i class="fa-solid fa-border-all text-xl"></i>
+</div>
+<h1 class="text-xl font-bold text-brand-darkblue tracking-tight">CrossWord Quest</h1>
+</header>
+<!-- Main Copy -->
+<div class="z-10 flex-grow">
+<h2 class="text-4xl font-extrabold leading-tight mb-6 text-slate-800">
+          Challenge your mind<br/>
+          with <span class="text-brand-blue">crossword</span><br/>
+          puzzles
+        </h2>
+<p class="text-brand-muted leading-relaxed text-sm max-w-sm mb-12">
+          Unlock your vocabulary potential. Join thousands of grandmasters in the ultimate daily intellectual adventure.
+        </p>
+<!-- Illustration Graphic -->
+<div class="relative w-64 h-64 mx-auto rotate-[-5deg] transform transition-transform hover:rotate-0 duration-500 ease-in-out cursor-default" data-purpose="puzzle-graphic">
+<div class="absolute inset-0 bg-white rounded-2xl shadow-xl border border-slate-200 grid grid-cols-4 grid-rows-4 p-2 gap-2">
+<!-- Row 1 -->
+<div class="bg-brand-darkblue rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">W</div>
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-brand-purple rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">Q</div>
+<!-- Row 2 -->
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-brand-blue rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">O</div>
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-slate-100 rounded-lg"></div>
+<!-- Row 3 -->
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-blue-300 rounded-lg flex items-center justify-center text-brand-darkblue font-bold text-xl shadow-inner">R</div>
+<div class="bg-slate-100 rounded-lg"></div>
+<!-- Row 4 -->
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-slate-100 rounded-lg"></div>
+<div class="bg-brand-darkblue rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">D</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="mt-auto pt-8 flex items-center text-xs text-slate-400 gap-4 z-10">
+<span>Version 3.4.12</span>
+<span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+<span>Editor's Choice 2024</span>
+</footer>
+</section>
+<!-- END: Left Information Pane -->
+<!-- BEGIN: Right Login Pane -->
+<section class="w-1/2 bg-white p-12 flex flex-col justify-center relative" data-purpose="login-form-pane">
+<div class="max-w-md w-full mx-auto">
+<!-- Login Header -->
+<div class="mb-10 text-center sm:text-left">
+<h2 class="text-3xl font-bold mb-2 text-slate-800">Welcome Back</h2>
+<p class="text-brand-muted text-sm">Enter your credentials to continue your quest.</p>
+</div>
+<!-- Login Form -->
+<form action="#" class="space-y-6" data-purpose="login-form" method="POST">
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-slate-700" for="username">Username</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+<i class="fa-regular fa-user"></i>
+</div>
+<input class="block w-full pl-11 pr-3 py-3 border-none bg-slate-100 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-brand-blue focus:bg-white transition-colors text-sm" id="username" name="username" placeholder="Enter your username" required="" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="block text-sm font-semibold text-slate-700" for="password">Password</label>
+<a class="text-xs text-brand-muted hover:text-brand-blue transition-colors" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+<i class="fa-solid fa-lock"></i>
+</div>
+<input class="block w-full pl-11 pr-3 py-3 border-none bg-slate-100 rounded-xl text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-brand-blue focus:bg-white transition-colors text-sm tracking-widest" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-4 space-y-3 text-center">
+<button class="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-brand-blue hover:bg-brand-darkblue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-all duration-200 group" type="submit">
+              Login
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+</button>
+<button class="w-full flex justify-center items-center gap-2 py-3 px-4 border border-slate-200 rounded-xl shadow-sm text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 transition-all duration-200 group" type="button">
+              Exit
+              <i class="fa-solid fa-arrow-right-from-bracket group-hover:translate-x-1 transition-transform text-slate-400"></i>
+</button>
+</div>
+</form>
+<!-- Social Login / Sign In With -->
+<div class="mt-12 text-center">
+<p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Or sign in with</p>
+<div class="flex justify-center gap-4">
+<button aria-label="Sign in with Steam" class="w-10 h-10 rounded-full bg-brand-darkblue flex items-center justify-center text-white hover:bg-slate-800 transition-colors shadow-sm" type="button">
+<i class="fa-brands fa-steam"></i>
+</button>
+<button aria-label="Sign in with Google" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-50 transition-colors shadow-sm" type="button">
+<i class="fa-brands fa-google text-sm"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Watermark/Logo faint bottom right -->
+<div class="absolute bottom-6 right-6 opacity-5 pointer-events-none">
+<i class="fa-solid fa-check-double text-6xl"></i>
+</div>
+</section>
+<!-- END: Right Login Pane -->
+</main>
+<!-- END: Main Login Container -->
+</body></html>
