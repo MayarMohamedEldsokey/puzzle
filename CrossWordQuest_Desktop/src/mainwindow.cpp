@@ -5,9 +5,11 @@
 #include <QTextStream>
 #include <QStandardPaths>
 #include <QCoreApplication>
+#include <QQmlApplicationEngine>
+#include <QDir>
 
 MainWindow::MainWindow(AuthManager* authManager, QWidget* parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), m_qmlEngine(nullptr)
 {
     setWindowTitle("CrossWord Quest - Authentication");
     setWindowIcon(QIcon(""));
@@ -111,8 +113,85 @@ void MainWindow::onSwitchToLogin()
 
 void MainWindow::onLoginSuccess()
 {
-    qDebug() << "Login successful!";
-    // TODO: Navigate to dashboard
+    qDebug() << "Login successful! Dynamic loading crossword dashboard...";
+
+    // Recreate the QML Engine to guarantee a clean state/session
+    if (m_qmlEngine) {
+        delete m_qmlEngine;
+    }
+    m_qmlEngine = new QQmlApplicationEngine(this);
+
+    // Search for src/dashboard/Main.qml using an extremely robust multi-level fallback search
+    QString qmlPath = QCoreApplication::applicationDirPath() + "/Main.qml"; // Direct copy next to executable
+    
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QCoreApplication::applicationDirPath() + "/src/dashboard/Main.qml";
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QCoreApplication::applicationDirPath() + "/../src/dashboard/Main.qml";
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QCoreApplication::applicationDirPath() + "/../../src/dashboard/Main.qml";
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QCoreApplication::applicationDirPath() + "/../../../src/dashboard/Main.qml"; // For deep build structures
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QDir::currentPath() + "/src/dashboard/Main.qml"; // Current working directory (project root)
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QDir::currentPath() + "/../src/dashboard/Main.qml"; // Build directory under root
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QDir::currentPath() + "/../../src/dashboard/Main.qml"; // Deep build directory under root
+    }
+    if (!QFile::exists(qmlPath)) {
+        qmlPath = QDir::currentPath() + "/../../../src/dashboard/Main.qml"; // Multi-level build directory under root
+    }
+
+    qDebug() << "Resolved QML Path:" << qmlPath;
+
+    if (!QFile::exists(qmlPath)) {
+        qWarning() << "CRITICAL: src/dashboard/Main.qml could not be found!";
+        return;
+    }
+
+    m_qmlEngine->load(QUrl::fromLocalFile(qmlPath));
+
+    if (m_qmlEngine->rootObjects().isEmpty()) {
+        qWarning() << "CRITICAL: QQmlApplicationEngine failed to load src/dashboard/Main.qml!";
+        return;
+    }
+
+    // Connect the root QML Window's visibility changed signal to return to Login Screen on close
+    QObject* rootObject = m_qmlEngine->rootObjects().first();
+    if (rootObject) {
+        connect(rootObject, SIGNAL(visibleChanged(bool)), this, SLOT(onQmlWindowVisibleChanged(bool)));
+    }
+
+    // Hide the login MainWindow
+    this->hide();
+}
+
+void MainWindow::onQmlWindowVisibleChanged(bool visible)
+{
+    // When the QML window is closed or hidden, visible becomes false
+    if (!visible) {
+        qDebug() << "QML Dashboard Window closed. Swapping back to C++ Login screen...";
+        
+        // Log out user
+        if (m_authManager) {
+            m_authManager->logout();
+        }
+
+        // Reset the login form inputs
+        if (m_loginScreen) {
+            m_loginScreen->resetForm();
+        }
+
+        // Show the login MainWindow again
+        this->show();
+    }
 }
 
 void MainWindow::onRegistrationSuccess()

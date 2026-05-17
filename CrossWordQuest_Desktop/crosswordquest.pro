@@ -1,4 +1,4 @@
-QT += core gui widgets network sql concurrent
+QT += core gui widgets network sql concurrent qml quick
 
 CONFIG += c++17
 
@@ -57,3 +57,9 @@ OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
 RCC_DIR = build/rcc
 UI_DIR = build/ui
+
+# QML & extra files for Qt Creator visibility
+DISTFILES += \
+    src/dashboard/Main.qml \
+    src/dashboard/CMakeLists.txt \
+    src/dashboard/main.cpp

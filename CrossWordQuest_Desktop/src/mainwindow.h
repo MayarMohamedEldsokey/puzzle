@@ -7,6 +7,8 @@
 #include "ui/login_screen.h"
 #include "ui/registration_screen.h"
 
+class QQmlApplicationEngine;
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -19,6 +21,7 @@ private slots:
     void onSwitchToLogin();
     void onLoginSuccess();
     void onRegistrationSuccess();
+    void onQmlWindowVisibleChanged(bool visible);
 
 private:
     void setupUI();
@@ -33,6 +36,9 @@ private:
 
     // Auth manager
     AuthManager* m_authManager;
+
+    // QML Engine for Dashboard
+    QQmlApplicationEngine* m_qmlEngine;
 };
 
 #endif // MAINWINDOW_H

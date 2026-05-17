@@ -15,6 +15,8 @@ find_package(Qt6 COMPONENTS
     Network
     Sql
     Concurrent
+    Qml
+    Quick
     REQUIRED
 )
 
@@ -46,6 +48,11 @@ add_executable(CrossWordQuestAuth
     
     # Resources
     resources/resources.qrc
+    
+    # Dashboard (QML & sources)
+    src/dashboard/Main.qml
+    src/dashboard/main.cpp
+    src/dashboard/CMakeLists.txt
 )
 
 # Link Qt libraries
@@ -56,6 +63,8 @@ target_link_libraries(CrossWordQuestAuth
     Qt6::Network
     Qt6::Sql
     Qt6::Concurrent
+    Qt6::Qml
+    Qt6::Quick
 )
 
 # Include directories
@@ -70,3 +79,6 @@ target_include_directories(CrossWordQuestAuth PRIVATE
 set_target_properties(CrossWordQuestAuth PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
+
+# Automatically copy Main.qml to the output directory next to the built executable
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/dashboard/Main.qml DESTINATION ${CMAKE_BINARY_DIR}/bin)
