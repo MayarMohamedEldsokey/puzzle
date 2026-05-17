@@ -29,6 +29,7 @@ private slots:
     void onLoginFailed(const QString& errorMessage);
     void onEmailTextChanged(const QString& text);
     void onPasswordTextChanged(const QString& text);
+    void onSignUpLinkClicked();
 
 private:
     void setupUI();
@@ -43,6 +44,7 @@ private:
     QPushButton* m_loginButton;
     QPushButton* m_exitButton;
     QPushButton* m_forgotPasswordButton;
+    QPushButton* m_signUpLinkButton;
     QLabel* m_errorMessageLabel;
     QLabel* m_titleLabel;
     QLabel* m_subtitleLabel;

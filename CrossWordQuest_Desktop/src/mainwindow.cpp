@@ -4,19 +4,23 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStandardPaths>
+#include <QCoreApplication>
 
-MainWindow::MainWindow(QWidget* parent)
+MainWindow::MainWindow(AuthManager* authManager, QWidget* parent)
     : QMainWindow(parent)
 {
     setWindowTitle("CrossWord Quest - Authentication");
     setWindowIcon(QIcon(""));
 
-    // Initialize auth manager
-    m_authManager = new AuthManager(this);
-    
-    // Enable test mode for development/testing (before Supabase integration)
-    m_authManager->setTestMode(true);
-    
+    // Use provided AuthManager or create our own
+    if (authManager) {
+        m_authManager = authManager;
+    } else {
+        m_authManager = new AuthManager(this);
+        // Enable test mode for development/testing (before Supabase integration)
+        m_authManager->setTestMode(true);
+    }
+
     loadSupabaseConfig();
 
     setupUI();
@@ -94,6 +98,7 @@ void MainWindow::loadSupabaseConfig()
 
 void MainWindow::onSwitchToRegistration()
 {
+    qDebug() << "DEBUG: MainWindow::onSwitchToRegistration called - switching widget to RegistrationScreen!";
     m_registrationScreen->resetForm();
     m_stackedWidget->setCurrentWidget(m_registrationScreen);
 }

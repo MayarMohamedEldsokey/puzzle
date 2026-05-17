@@ -1,4 +1,6 @@
 #include "login_screen.h"
+#include <QApplication>
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -31,7 +33,7 @@ void LoginScreen::setupUI()
     // Left pane - Branding
     QWidget* leftPane = new QWidget();
     leftPane->setStyleSheet(
-        "QWidget { background-color: #f1f5f9; }"
+        "QWidget { background-color: #f8fafc; }"
     );
     QVBoxLayout* leftLayout = new QVBoxLayout(leftPane);
     leftLayout->setContentsMargins(48, 48, 48, 48);
@@ -74,7 +76,7 @@ void LoginScreen::setupUI()
         "  font-size: 32px;"
         "  font-weight: 800;"
         "  color: #334155;"
-        "  line-height: 1.5;"
+        "  line-height: 1.3;"
         "}"
     );
     titleLabel->setWordWrap(true);
@@ -94,35 +96,88 @@ void LoginScreen::setupUI()
     subtitleLabel->setWordWrap(true);
     subtitleLabel->setMaximumWidth(320);
 
-    // Puzzle graphic placeholder (simplified for now)
-    QLabel* puzzleGraphic = new QLabel();
-    puzzleGraphic->setMinimumHeight(200);
-    puzzleGraphic->setAlignment(Qt::AlignCenter);
+    // Puzzle graphic crossword visualizer
+    QWidget* puzzleGraphic = new QWidget();
     puzzleGraphic->setStyleSheet(
-        "QLabel {"
+        "QWidget {"
         "  border: 1px solid #e2e8f0;"
         "  border-radius: 16px;"
-        "  background-color: white;"
+        "  background-color: #ffffff;"
         "}"
     );
-
-    // Footer info
-    QHBoxLayout* footerLayout = new QHBoxLayout();
-    QLabel* versionLabel = new QLabel("Version 3.4.12");
-    QLabel* choiceLabel = new QLabel("Editor's Choice 2024");
-    versionLabel->setStyleSheet("color: #94a3b8; font-size: 11px;");
-    choiceLabel->setStyleSheet("color: #94a3b8; font-size: 11px;");
-    footerLayout->addWidget(versionLabel);
-    footerLayout->addSpacing(4);
-    footerLayout->addWidget(choiceLabel);
-    footerLayout->addStretch();
+    
+    QGridLayout* gridLayout = new QGridLayout(puzzleGraphic);
+    gridLayout->setSpacing(6);
+    gridLayout->setContentsMargins(16, 16, 16, 16);
+    gridLayout->setAlignment(Qt::AlignCenter);
+    
+    const int GRID_SIZE = 6;
+    const char* gridData[GRID_SIZE] = {
+        "WORD  ",
+        "  E   ",
+        "PLAY  ",
+        "  D   ",
+        "      ",
+        "QUEST "
+    };
+    
+    int cellNumbers[GRID_SIZE][GRID_SIZE] = {
+        {1, 0, 2, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {4, 0, 0, 0, 0, 0}
+    };
+    
+    for (int r = 0; r < GRID_SIZE; ++r) {
+        for (int c = 0; c < GRID_SIZE; ++c) {
+            char letter = gridData[r][c];
+            int num = cellNumbers[r][c];
+            QWidget* cell = new QWidget();
+            cell->setFixedSize(40, 40);
+            
+            if (letter != ' ') {
+                QVBoxLayout* cellLayout = new QVBoxLayout(cell);
+                cellLayout->setContentsMargins(4, 2, 4, 4);
+                cellLayout->setSpacing(0);
+                
+                QLabel* numLabel = new QLabel(num > 0 ? QString::number(num) : "");
+                numLabel->setStyleSheet("font-size: 8px; font-weight: bold; color: #94a3b8; font-family: 'Inter'; background: transparent; border: none;");
+                numLabel->setFixedHeight(10);
+                
+                QLabel* letterLabel = new QLabel(QString(letter));
+                letterLabel->setStyleSheet("font-size: 16px; font-weight: 800; color: #1e293b; font-family: 'Inter'; background: transparent; border: none;");
+                letterLabel->setAlignment(Qt::AlignCenter);
+                
+                cellLayout->addWidget(numLabel);
+                cellLayout->addWidget(letterLabel);
+                
+                cell->setStyleSheet(
+                    "QWidget {"
+                    "  background-color: #ffffff;"
+                    "  border: 2px solid #cbd5e1;"
+                    "  border-radius: 6px;"
+                    "}"
+                );
+            } else {
+                cell->setStyleSheet(
+                    "QWidget {"
+                    "  background-color: #1e293b;"
+                    "  border: 2px solid #1e293b;"
+                    "  border-radius: 6px;"
+                    "}"
+                );
+            }
+            gridLayout->addWidget(cell, r, c);
+        }
+    }
 
     leftLayout->addLayout(brandLayout);
     leftLayout->addWidget(titleLabel);
     leftLayout->addWidget(subtitleLabel);
     leftLayout->addWidget(puzzleGraphic);
     leftLayout->addStretch();
-    leftLayout->addLayout(footerLayout);
 
     // Right pane - Login form
     QWidget* rightPane = new QWidget();
@@ -169,17 +224,16 @@ void LoginScreen::setupUI()
     m_emailInput->setPlaceholderText("Enter your username or email");
     m_emailInput->setStyleSheet(
         "QLineEdit {"
-        "  border: none;"
-        "  background-color: #f1f5f9;"
+        "  border: 1px solid #cbd5e1;"
+        "  background-color: #f8fafc;"
         "  border-radius: 10px;"
-        "  padding: 10px 12px;"
-        "  font-size: 12px;"
-        "  color: #1e293b;"
+        "  padding: 10px 14px;"
+        "  font-size: 13px;"
+        "  color: #0f172a;"
         "}"
         "QLineEdit:focus {"
         "  background-color: white;"
-        "  border: 2px solid #4a6fa5;"
-        "  padding: 9px 11px;"
+        "  border: 2px solid #3b82f6;"
         "}"
     );
     m_emailInput->setMinimumHeight(40);
@@ -197,18 +251,19 @@ void LoginScreen::setupUI()
     QHBoxLayout* passwordLabelLayout = new QHBoxLayout();
     passwordLabelLayout->addWidget(passwordLabel);
     passwordLabelLayout->addStretch();
-    QLabel* forgotLink = new QLabel("<a href='#' style='color: #64748b; text-decoration: none;'>Forgot?</a>");
     m_forgotPasswordButton = new QPushButton("Forgot?");
     m_forgotPasswordButton->setFlat(true);
+    m_forgotPasswordButton->setCursor(Qt::PointingHandCursor);
     m_forgotPasswordButton->setStyleSheet(
         "QPushButton {"
         "  color: #64748b;"
         "  border: none;"
         "  background-color: transparent;"
-        "  font-size: 10px;"
+        "  font-size: 11px;"
+        "  font-weight: 600;"
         "  padding: 0px;"
         "}"
-        "QPushButton:hover { color: #4a6fa5; }"
+        "QPushButton:hover { color: #3b82f6; }"
     );
     passwordLabelLayout->addWidget(m_forgotPasswordButton);
 
@@ -217,17 +272,16 @@ void LoginScreen::setupUI()
     m_passwordInput->setEchoMode(QLineEdit::Password);
     m_passwordInput->setStyleSheet(
         "QLineEdit {"
-        "  border: none;"
-        "  background-color: #f1f5f9;"
+        "  border: 1px solid #cbd5e1;"
+        "  background-color: #f8fafc;"
         "  border-radius: 10px;"
-        "  padding: 10px 12px;"
-        "  font-size: 12px;"
-        "  color: #1e293b;"
+        "  padding: 10px 14px;"
+        "  font-size: 13px;"
+        "  color: #0f172a;"
         "}"
         "QLineEdit:focus {"
         "  background-color: white;"
-        "  border: 2px solid #4a6fa5;"
-        "  padding: 9px 11px;"
+        "  border: 2px solid #3b82f6;"
         "}"
     );
     m_passwordInput->setMinimumHeight(40);
@@ -237,10 +291,12 @@ void LoginScreen::setupUI()
     m_errorMessageLabel->setStyleSheet(
         "QLabel {"
         "  color: #dc2626;"
-        "  font-size: 11px;"
-        "  padding: 8px;"
-        "  background-color: #fee2e2;"
-        "  border-radius: 6px;"
+        "  font-size: 12px;"
+        "  font-weight: 500;"
+        "  padding: 10px 12px;"
+        "  background-color: #fef2f2;"
+        "  border: 1px solid #fee2e2;"
+        "  border-radius: 8px;"
         "}"
     );
     m_errorMessageLabel->setWordWrap(true);
@@ -250,19 +306,19 @@ void LoginScreen::setupUI()
     m_loginButton = new QPushButton("Login →");
     m_loginButton->setStyleSheet(
         "QPushButton {"
-        "  background-color: #4a6fa5;"
+        "  background-color: #3b82f6;"
         "  color: white;"
         "  border: none;"
         "  border-radius: 10px;"
         "  padding: 12px 16px;"
-        "  font-size: 12px;"
+        "  font-size: 13px;"
         "  font-weight: 600;"
         "}"
-        "QPushButton:hover { background-color: #2a4365; }"
-        "QPushButton:pressed { background-color: #1a2c45; }"
+        "QPushButton:hover { background-color: #2563eb; }"
+        "QPushButton:pressed { background-color: #1d4ed8; }"
         "QPushButton:disabled {"
-        "  background-color: #cbd5e1;"
-        "  color: #94a3b8;"
+        "  background-color: #94a3b8;"
+        "  color: #e2e8f0;"
         "}"
     );
     m_loginButton->setMinimumHeight(40);
@@ -272,47 +328,41 @@ void LoginScreen::setupUI()
         "QPushButton {"
         "  background-color: #f1f5f9;"
         "  color: #475569;"
-        "  border: 1px solid #e2e8f0;"
+        "  border: 1px solid #cbd5e1;"
         "  border-radius: 10px;"
         "  padding: 12px 16px;"
-        "  font-size: 12px;"
+        "  font-size: 13px;"
         "  font-weight: 600;"
         "}"
-        "QPushButton:hover { background-color: #e2e8f0; }"
+        "QPushButton:hover { background-color: #e2e8f0; color: #1e293b; }"
         "QPushButton:pressed { background-color: #cbd5e1; }"
     );
     m_exitButton->setMinimumHeight(40);
 
-    // Social buttons
-    QHBoxLayout* socialLayout = new QHBoxLayout();
-    QPushButton* steamButton = new QPushButton("🔵");
-    QPushButton* googleButton = new QPushButton("⊕");
-    steamButton->setStyleSheet(
+    // Create Account navigation row
+    QHBoxLayout* registerRow = new QHBoxLayout();
+    QLabel* registerLabel = new QLabel("Don't have an account?");
+    registerLabel->setStyleSheet("color: #64748b; font-size: 12px;");
+    m_signUpLinkButton = new QPushButton("Create Account");
+    m_signUpLinkButton->setFlat(true);
+    m_signUpLinkButton->setCursor(Qt::PointingHandCursor);
+    m_signUpLinkButton->setStyleSheet(
         "QPushButton {"
-        "  background-color: #2a4365;"
-        "  color: white;"
+        "  color: #3b82f6;"
         "  border: none;"
-        "  border-radius: 20px;"
-        "  min-width: 40px;"
-        "  min-height: 40px;"
+        "  background-color: transparent;"
+        "  font-size: 12px;"
+        "  font-weight: 700;"
+        "  padding: 0px;"
         "}"
-        "QPushButton:hover { background-color: #334155; }"
+        "QPushButton:hover { color: #1d4ed8; text-decoration: underline; }"
     );
-    googleButton->setStyleSheet(
-        "QPushButton {"
-        "  background-color: white;"
-        "  color: #475569;"
-        "  border: 1px solid #e2e8f0;"
-        "  border-radius: 20px;"
-        "  min-width: 40px;"
-        "  min-height: 40px;"
-        "}"
-        "QPushButton:hover { background-color: #f8fafc; }"
-    );
-    socialLayout->addStretch();
-    socialLayout->addWidget(steamButton);
-    socialLayout->addWidget(googleButton);
-    socialLayout->addStretch();
+    registerRow->addStretch();
+    registerRow->addWidget(registerLabel);
+    registerRow->addWidget(m_signUpLinkButton);
+    registerRow->addStretch();
+
+
 
     // Add to form layout
     formLayout->addWidget(m_titleLabel);
@@ -325,8 +375,8 @@ void LoginScreen::setupUI()
     formLayout->addWidget(m_errorMessageLabel);
     formLayout->addWidget(m_loginButton);
     formLayout->addWidget(m_exitButton);
-    formLayout->addSpacing(20);
-    formLayout->addLayout(socialLayout);
+    formLayout->addLayout(registerRow);
+
 
     rightLayout->addWidget(formContainer);
     rightLayout->addStretch();
@@ -344,6 +394,7 @@ void LoginScreen::connectSignals()
     connect(m_loginButton, &QPushButton::clicked, this, &LoginScreen::onLoginButtonClicked);
     connect(m_exitButton, &QPushButton::clicked, this, &LoginScreen::onExitButtonClicked);
     connect(m_forgotPasswordButton, &QPushButton::clicked, this, &LoginScreen::onForgotPasswordClicked);
+    connect(m_signUpLinkButton, &QPushButton::clicked, this, &LoginScreen::onSignUpLinkClicked);
 
     connect(m_authManager, &AuthManager::loginSuccess, this, &LoginScreen::onLoginSuccess);
     connect(m_authManager, &AuthManager::loginFailed, this, &LoginScreen::onLoginFailed);
@@ -403,14 +454,20 @@ void LoginScreen::onLoginFailed(const QString& errorMessage)
     showErrorMessage("Login Failed", errorMessage);
 }
 
-void LoginScreen::onEmailTextChanged(const QString& text)
+void LoginScreen::onEmailTextChanged(const QString& /*text*/)
 {
     clearErrorMessage();
 }
 
-void LoginScreen::onPasswordTextChanged(const QString& text)
+void LoginScreen::onPasswordTextChanged(const QString& /*text*/)
 {
     clearErrorMessage();
+}
+
+void LoginScreen::onSignUpLinkClicked()
+{
+    qDebug() << "DEBUG: LoginScreen::onSignUpLinkClicked - 'Create Account' link was clicked!";
+    emit switchToRegistration();
 }
 
 void LoginScreen::resetForm()

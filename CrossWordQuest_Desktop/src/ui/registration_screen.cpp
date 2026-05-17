@@ -1,6 +1,7 @@
 #include "registration_screen.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QApplication>
 
 RegistrationScreen::RegistrationScreen(AuthManager* authManager, QWidget* parent)
@@ -25,7 +26,7 @@ void RegistrationScreen::setupUI()
     // Left pane - Branding
     QWidget* leftPane = new QWidget();
     leftPane->setStyleSheet(
-        "QWidget { background-color: #f1f5f9; }"
+        "QWidget { background-color: #f8fafc; }"
     );
     QVBoxLayout* leftLayout = new QVBoxLayout(leftPane);
     leftLayout->setContentsMargins(48, 48, 48, 48);
@@ -68,7 +69,7 @@ void RegistrationScreen::setupUI()
         "  font-size: 32px;"
         "  font-weight: 800;"
         "  color: #334155;"
-        "  line-height: 1.5;"
+        "  line-height: 1.3;"
         "}"
     );
     titleLabel->setWordWrap(true);
@@ -88,35 +89,88 @@ void RegistrationScreen::setupUI()
     subtitleLabel->setWordWrap(true);
     subtitleLabel->setMaximumWidth(320);
 
-    // Puzzle graphic placeholder
-    QLabel* puzzleGraphic = new QLabel();
-    puzzleGraphic->setMinimumHeight(200);
-    puzzleGraphic->setAlignment(Qt::AlignCenter);
+    // Puzzle graphic crossword visualizer
+    QWidget* puzzleGraphic = new QWidget();
     puzzleGraphic->setStyleSheet(
-        "QLabel {"
+        "QWidget {"
         "  border: 1px solid #e2e8f0;"
         "  border-radius: 16px;"
-        "  background-color: white;"
+        "  background-color: #ffffff;"
         "}"
     );
-
-    // Footer info
-    QHBoxLayout* footerLayout = new QHBoxLayout();
-    QLabel* versionLabel = new QLabel("Version 2.4.0");
-    QLabel* choiceLabel = new QLabel("Editor's Choice 2024");
-    versionLabel->setStyleSheet("color: #94a3b8; font-size: 11px;");
-    choiceLabel->setStyleSheet("color: #94a3b8; font-size: 11px;");
-    footerLayout->addWidget(versionLabel);
-    footerLayout->addSpacing(4);
-    footerLayout->addWidget(choiceLabel);
-    footerLayout->addStretch();
+    
+    QGridLayout* gridLayout = new QGridLayout(puzzleGraphic);
+    gridLayout->setSpacing(6);
+    gridLayout->setContentsMargins(16, 16, 16, 16);
+    gridLayout->setAlignment(Qt::AlignCenter);
+    
+    const int GRID_SIZE = 6;
+    const char* gridData[GRID_SIZE] = {
+        "WORD  ",
+        "  E   ",
+        "PLAY  ",
+        "  D   ",
+        "      ",
+        "QUEST "
+    };
+    
+    int cellNumbers[GRID_SIZE][GRID_SIZE] = {
+        {1, 0, 2, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0},
+        {4, 0, 0, 0, 0, 0}
+    };
+    
+    for (int r = 0; r < GRID_SIZE; ++r) {
+        for (int c = 0; c < GRID_SIZE; ++c) {
+            char letter = gridData[r][c];
+            int num = cellNumbers[r][c];
+            QWidget* cell = new QWidget();
+            cell->setFixedSize(40, 40);
+            
+            if (letter != ' ') {
+                QVBoxLayout* cellLayout = new QVBoxLayout(cell);
+                cellLayout->setContentsMargins(4, 2, 4, 4);
+                cellLayout->setSpacing(0);
+                
+                QLabel* numLabel = new QLabel(num > 0 ? QString::number(num) : "");
+                numLabel->setStyleSheet("font-size: 8px; font-weight: bold; color: #94a3b8; font-family: 'Inter'; background: transparent; border: none;");
+                numLabel->setFixedHeight(10);
+                
+                QLabel* letterLabel = new QLabel(QString(letter));
+                letterLabel->setStyleSheet("font-size: 16px; font-weight: 800; color: #1e293b; font-family: 'Inter'; background: transparent; border: none;");
+                letterLabel->setAlignment(Qt::AlignCenter);
+                
+                cellLayout->addWidget(numLabel);
+                cellLayout->addWidget(letterLabel);
+                
+                cell->setStyleSheet(
+                    "QWidget {"
+                    "  background-color: #ffffff;"
+                    "  border: 2px solid #cbd5e1;"
+                    "  border-radius: 6px;"
+                    "}"
+                );
+            } else {
+                cell->setStyleSheet(
+                    "QWidget {"
+                    "  background-color: #1e293b;"
+                    "  border: 2px solid #1e293b;"
+                    "  border-radius: 6px;"
+                    "}"
+                );
+            }
+            gridLayout->addWidget(cell, r, c);
+        }
+    }
 
     leftLayout->addLayout(brandLayout);
     leftLayout->addWidget(titleLabel);
     leftLayout->addWidget(subtitleLabel);
     leftLayout->addWidget(puzzleGraphic);
     leftLayout->addStretch();
-    leftLayout->addLayout(footerLayout);
 
     // Right pane - Registration form
     QWidget* rightPane = new QWidget();
@@ -163,17 +217,16 @@ void RegistrationScreen::setupUI()
     m_emailInput->setPlaceholderText("Enter your email");
     m_emailInput->setStyleSheet(
         "QLineEdit {"
-        "  border: none;"
-        "  background-color: #f1f5f9;"
+        "  border: 1px solid #cbd5e1;"
+        "  background-color: #f8fafc;"
         "  border-radius: 10px;"
-        "  padding: 10px 12px;"
-        "  font-size: 12px;"
-        "  color: #1e293b;"
+        "  padding: 10px 14px;"
+        "  font-size: 13px;"
+        "  color: #0f172a;"
         "}"
         "QLineEdit:focus {"
         "  background-color: white;"
-        "  border: 2px solid #3b5998;"
-        "  padding: 9px 11px;"
+        "  border: 2px solid #3b82f6;"
         "}"
     );
     m_emailInput->setMinimumHeight(40);
@@ -191,17 +244,16 @@ void RegistrationScreen::setupUI()
     m_usernameInput->setPlaceholderText("Choose a username");
     m_usernameInput->setStyleSheet(
         "QLineEdit {"
-        "  border: none;"
-        "  background-color: #f1f5f9;"
+        "  border: 1px solid #cbd5e1;"
+        "  background-color: #f8fafc;"
         "  border-radius: 10px;"
-        "  padding: 10px 12px;"
-        "  font-size: 12px;"
-        "  color: #1e293b;"
+        "  padding: 10px 14px;"
+        "  font-size: 13px;"
+        "  color: #0f172a;"
         "}"
         "QLineEdit:focus {"
         "  background-color: white;"
-        "  border: 2px solid #3b5998;"
-        "  padding: 9px 11px;"
+        "  border: 2px solid #3b82f6;"
         "}"
     );
     m_usernameInput->setMinimumHeight(40);
@@ -220,17 +272,16 @@ void RegistrationScreen::setupUI()
     m_passwordInput->setEchoMode(QLineEdit::Password);
     m_passwordInput->setStyleSheet(
         "QLineEdit {"
-        "  border: none;"
-        "  background-color: #f1f5f9;"
+        "  border: 1px solid #cbd5e1;"
+        "  background-color: #f8fafc;"
         "  border-radius: 10px;"
-        "  padding: 10px 12px;"
-        "  font-size: 12px;"
-        "  color: #1e293b;"
+        "  padding: 10px 14px;"
+        "  font-size: 13px;"
+        "  color: #0f172a;"
         "}"
         "QLineEdit:focus {"
         "  background-color: white;"
-        "  border: 2px solid #3b5998;"
-        "  padding: 9px 11px;"
+        "  border: 2px solid #3b82f6;"
         "}"
     );
     m_passwordInput->setMinimumHeight(40);
@@ -239,24 +290,26 @@ void RegistrationScreen::setupUI()
     m_passwordStrengthLabel = new QLabel("Password strength: None");
     m_passwordStrengthLabel->setStyleSheet(
         "QLabel {"
-        "  font-size: 10px;"
+        "  font-size: 11px;"
+        "  font-weight: 600;"
         "  color: #64748b;"
         "}"
     );
     m_passwordStrengthBar = new QProgressBar();
-    m_passwordStrengthBar->setMaximumHeight(4);
+    m_passwordStrengthBar->setMaximumHeight(6);
     m_passwordStrengthBar->setStyleSheet(
         "QProgressBar {"
         "  border: none;"
         "  background-color: #e2e8f0;"
-        "  border-radius: 2px;"
+        "  border-radius: 3px;"
         "}"
         "QProgressBar::chunk {"
         "  background-color: #dc2626;"
-        "  border-radius: 2px;"
+        "  border-radius: 3px;"
         "}"
     );
     m_passwordStrengthBar->setValue(0);
+    m_passwordStrengthBar->setTextVisible(false);
 
     // Confirm password field
     QLabel* confirmPasswordLabel = new QLabel("Confirm Password");
@@ -272,17 +325,16 @@ void RegistrationScreen::setupUI()
     m_confirmPasswordInput->setEchoMode(QLineEdit::Password);
     m_confirmPasswordInput->setStyleSheet(
         "QLineEdit {"
-        "  border: none;"
-        "  background-color: #f1f5f9;"
+        "  border: 1px solid #cbd5e1;"
+        "  background-color: #f8fafc;"
         "  border-radius: 10px;"
-        "  padding: 10px 12px;"
-        "  font-size: 12px;"
-        "  color: #1e293b;"
+        "  padding: 10px 14px;"
+        "  font-size: 13px;"
+        "  color: #0f172a;"
         "}"
         "QLineEdit:focus {"
         "  background-color: white;"
-        "  border: 2px solid #3b5998;"
-        "  padding: 9px 11px;"
+        "  border: 2px solid #3b82f6;"
         "}"
     );
     m_confirmPasswordInput->setMinimumHeight(40);
@@ -292,10 +344,12 @@ void RegistrationScreen::setupUI()
     m_errorMessageLabel->setStyleSheet(
         "QLabel {"
         "  color: #dc2626;"
-        "  font-size: 11px;"
-        "  padding: 8px;"
-        "  background-color: #fee2e2;"
-        "  border-radius: 6px;"
+        "  font-size: 12px;"
+        "  font-weight: 500;"
+        "  padding: 10px 12px;"
+        "  background-color: #fef2f2;"
+        "  border: 1px solid #fee2e2;"
+        "  border-radius: 8px;"
         "}"
     );
     m_errorMessageLabel->setWordWrap(true);
@@ -305,19 +359,19 @@ void RegistrationScreen::setupUI()
     m_signUpButton = new QPushButton("Sign Up");
     m_signUpButton->setStyleSheet(
         "QPushButton {"
-        "  background-color: #3b5998;"
+        "  background-color: #3b82f6;"
         "  color: white;"
         "  border: none;"
         "  border-radius: 10px;"
         "  padding: 12px 16px;"
-        "  font-size: 12px;"
+        "  font-size: 13px;"
         "  font-weight: 600;"
         "}"
-        "QPushButton:hover { background-color: #2a4365; }"
-        "QPushButton:pressed { background-color: #1a2c45; }"
+        "QPushButton:hover { background-color: #2563eb; }"
+        "QPushButton:pressed { background-color: #1d4ed8; }"
         "QPushButton:disabled {"
-        "  background-color: #cbd5e1;"
-        "  color: #94a3b8;"
+        "  background-color: #94a3b8;"
+        "  color: #e2e8f0;"
         "}"
     );
     m_signUpButton->setMinimumHeight(40);
@@ -327,58 +381,18 @@ void RegistrationScreen::setupUI()
         "QPushButton {"
         "  background-color: #f1f5f9;"
         "  color: #475569;"
-        "  border: 1px solid #e2e8f0;"
+        "  border: 1px solid #cbd5e1;"
         "  border-radius: 10px;"
         "  padding: 12px 16px;"
-        "  font-size: 12px;"
+        "  font-size: 13px;"
         "  font-weight: 600;"
         "}"
-        "QPushButton:hover { background-color: #e2e8f0; }"
+        "QPushButton:hover { background-color: #e2e8f0; color: #1e293b; }"
         "QPushButton:pressed { background-color: #cbd5e1; }"
     );
     m_backToLoginButton->setMinimumHeight(40);
 
-    // Social buttons
-    QHBoxLayout* socialLayout = new QHBoxLayout();
-    QLabel* socialLabel = new QLabel("Or sign up with");
-    socialLabel->setStyleSheet(
-        "QLabel {"
-        "  font-size: 10px;"
-        "  color: #94a3b8;"
-        "  font-weight: 600;"
-        "  text-transform: uppercase;"
-        "}"
-    );
-    QPushButton* facebookButton = new QPushButton("f");
-    QPushButton* googleButton = new QPushButton("⊕");
-    facebookButton->setStyleSheet(
-        "QPushButton {"
-        "  background-color: white;"
-        "  color: #475569;"
-        "  border: 1px solid #e2e8f0;"
-        "  border-radius: 20px;"
-        "  min-width: 40px;"
-        "  min-height: 40px;"
-        "}"
-        "QPushButton:hover { background-color: #f8fafc; }"
-    );
-    googleButton->setStyleSheet(
-        "QPushButton {"
-        "  background-color: white;"
-        "  color: #475569;"
-        "  border: 1px solid #e2e8f0;"
-        "  border-radius: 20px;"
-        "  min-width: 40px;"
-        "  min-height: 40px;"
-        "}"
-        "QPushButton:hover { background-color: #f8fafc; }"
-    );
-    socialLayout->addStretch();
-    socialLayout->addWidget(socialLabel);
-    socialLayout->addStretch();
-    socialLayout->addWidget(facebookButton);
-    socialLayout->addWidget(googleButton);
-    socialLayout->addStretch();
+
 
     // Add to form layout
     formLayout->addWidget(m_titleLabel);
@@ -397,7 +411,7 @@ void RegistrationScreen::setupUI()
     formLayout->addWidget(m_errorMessageLabel);
     formLayout->addWidget(m_signUpButton);
     formLayout->addWidget(m_backToLoginButton);
-    formLayout->addLayout(socialLayout);
+
 
     rightLayout->addWidget(formContainer);
     rightLayout->addStretch();
@@ -462,12 +476,12 @@ void RegistrationScreen::onRegistrationFailed(const QString& errorMessage)
     showErrorMessage("Registration Failed", errorMessage);
 }
 
-void RegistrationScreen::onEmailTextChanged(const QString& text)
+void RegistrationScreen::onEmailTextChanged(const QString& /*text*/)
 {
     clearErrorMessage();
 }
 
-void RegistrationScreen::onUsernameTextChanged(const QString& text)
+void RegistrationScreen::onUsernameTextChanged(const QString& /*text*/)
 {
     clearErrorMessage();
 }
@@ -478,7 +492,7 @@ void RegistrationScreen::onPasswordTextChanged(const QString& text)
     updatePasswordStrengthIndicator(text);
 }
 
-void RegistrationScreen::onConfirmPasswordTextChanged(const QString& text)
+void RegistrationScreen::onConfirmPasswordTextChanged(const QString& /*text*/)
 {
     clearErrorMessage();
 }

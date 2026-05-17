@@ -1,5 +1,6 @@
 #include "auth_manager.h"
 #include <QDebug>
+#include <QRandomGenerator>
 
 AuthManager::AuthManager(QObject* parent)
     : QObject(parent), m_supabaseClient(nullptr), m_isAuthenticated(false), m_testMode(false)
@@ -73,9 +74,9 @@ void AuthManager::registerUser(const QString& email, const QString& password, co
         }
         
         // Simulate successful registration
-        m_accessToken = "test-token-" + QString::number(qrand());
+        m_accessToken = "test-token-" + QString::number(QRandomGenerator::global()->generate());
         m_refreshToken = "test-refresh-token";
-        m_userId = "test-user-" + QString::number(qrand());
+        m_userId = "test-user-" + QString::number(QRandomGenerator::global()->generate());
         m_isAuthenticated = true;
         emit authenticationChanged(true);
         emit registrationSuccess();

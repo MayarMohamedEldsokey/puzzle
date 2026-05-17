@@ -1,4 +1,4 @@
-QT += core gui network sql concurrent
+QT += core gui widgets network sql concurrent
 
 CONFIG += c++17
 
