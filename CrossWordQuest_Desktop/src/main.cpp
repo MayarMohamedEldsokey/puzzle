@@ -18,18 +18,10 @@ int main(int argc, char* argv[])
     // Enable test mode to make login work without Supabase
     authManager->setTestMode(true);
 
-    // Show the standalone login screen first
-    LoginScreen* login = new LoginScreen(authManager);
-    login->show();
-
-    // When login succeeds, open the main window and close the login screen
-    QObject::connect(authManager, &AuthManager::loginSuccess, [login, authManager]() {
-        MainWindow* mw = new MainWindow(authManager);
-        mw->show();
-        if (login) {
-            login->close();
-        }
-    });
+    // Show the MainWindow directly. It starts on the Login screen by default
+    // and supports seamless switching between Login and Registration!
+    MainWindow* mw = new MainWindow(authManager);
+    mw->show();
 
     return app.exec();
 }
