@@ -20,6 +20,7 @@ public:
 
 signals:
     void switchToRegistration();
+    void Dashboard();
 
 private slots:
     void onLoginButtonClicked();

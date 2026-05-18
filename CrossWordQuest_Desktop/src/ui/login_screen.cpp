@@ -444,7 +444,7 @@ void LoginScreen::onLoginSuccess()
     setLoginButtonEnabled(true);
     m_isLoading = false;
     resetForm();
-    // TODO: Navigate to dashboard
+    emit Dashboard();
 }
 
 void LoginScreen::onLoginFailed(const QString& errorMessage)

@@ -12,6 +12,7 @@ SOURCES += \
     src/auth/validators.cpp \
     src/auth/auth_manager.cpp \
     src/auth/error_handler.cpp \
+    src/ui/homepage.cpp \
     src/ui/login_screen.cpp \
     src/ui/registration_screen.cpp \
     src/models/user_model.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     src/auth/validators.h \
     src/auth/auth_manager.h \
     src/auth/error_handler.h \
+    src/ui/homepage.h \
     src/ui/login_screen.h \
     src/ui/registration_screen.h \
     src/models/user_model.h

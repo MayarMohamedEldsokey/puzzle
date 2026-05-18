@@ -1,4 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>../src/game/Main.qml</file>
+        <file>../src/result/GameResultPage.qml</file>
     </qresource>
 </RCC>

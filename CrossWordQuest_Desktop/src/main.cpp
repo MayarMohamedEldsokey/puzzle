@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+
     QApplication app(argc, argv);
 
     // Set application style and font
@@ -15,8 +16,8 @@ int main(int argc, char* argv[])
 
     // Create a shared AuthManager (owned by the app)
     AuthManager* authManager = new AuthManager(&app);
-    // Enable test mode to make login work without Supabase
-    authManager->setTestMode(true);
+    // Disable test mode to use real Supabase authentication
+    authManager->setTestMode(false);
 
     // Show the MainWindow directly. It starts on the Login screen by default
     // and supports seamless switching between Login and Registration!

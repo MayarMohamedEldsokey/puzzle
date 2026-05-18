@@ -107,6 +107,9 @@ AuthResponse SupabaseClient::parseAuthResponse(const QByteArray& responseData, i
         // Parse error message from response
         QString errorMessage = jsonObj.value("message").toString();
         if (errorMessage.isEmpty()) {
+            errorMessage = jsonObj.value("msg").toString();
+        }
+        if (errorMessage.isEmpty()) {
             errorMessage = jsonObj.value("error").toString();
         }
         if (errorMessage.isEmpty()) {
@@ -114,7 +117,9 @@ AuthResponse SupabaseClient::parseAuthResponse(const QByteArray& responseData, i
         }
 
         // Map Supabase errors to user-friendly messages
-        if (statusCode == 400) {
+        if (statusCode == 429 || errorMessage.contains("rate limit", Qt::CaseInsensitive)) {
+            response.errorMessage = "Too many requests. Please wait a minute and try again.";
+        } else if (statusCode == 400) {
             if (errorMessage.contains("Invalid login credentials", Qt::CaseInsensitive)) {
                 response.errorMessage = "Invalid email or password";
             } else if (errorMessage.contains("User already registered", Qt::CaseInsensitive)) {

@@ -49,10 +49,10 @@ add_executable(CrossWordQuestAuth
     # Resources
     resources/resources.qrc
     
-    # Dashboard (QML & sources)
-    src/dashboard/Main.qml
-    src/dashboard/main.cpp
-    src/dashboard/CMakeLists.txt
+    # Game Dashboard (QML & sources)
+    src/game/Main.qml
+    src/game/main.cpp
+    src/game/CMakeLists.txt
 )
 
 # Link Qt libraries
@@ -80,5 +80,6 @@ set_target_properties(CrossWordQuestAuth PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
-# Automatically copy Main.qml to the output directory next to the built executable
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/dashboard/Main.qml DESTINATION ${CMAKE_BINARY_DIR}/bin)
+# Automatically copy Main.qml and GameResultPage.qml to the output directory next to the built executable
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/game/Main.qml DESTINATION ${CMAKE_BINARY_DIR}/bin)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/result/GameResultPage.qml DESTINATION ${CMAKE_BINARY_DIR}/bin)

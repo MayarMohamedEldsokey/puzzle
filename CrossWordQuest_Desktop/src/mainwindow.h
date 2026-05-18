@@ -6,6 +6,7 @@
 #include "auth/auth_manager.h"
 #include "ui/login_screen.h"
 #include "ui/registration_screen.h"
+#include "ui/homepage.h"
 
 class QQmlApplicationEngine;
 
@@ -21,6 +22,8 @@ private slots:
     void onSwitchToLogin();
     void onLoginSuccess();
     void onRegistrationSuccess();
+    void onStartGame();
+    void onViewResults();
     void onQmlWindowVisibleChanged(bool visible);
 
 private:
@@ -33,6 +36,7 @@ private:
     QStackedWidget* m_stackedWidget;
     LoginScreen* m_loginScreen;
     RegistrationScreen* m_registrationScreen;
+    Homepage* m_homepage;
 
     // Auth manager
     AuthManager* m_authManager;
